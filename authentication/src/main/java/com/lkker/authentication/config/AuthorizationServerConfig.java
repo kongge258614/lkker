@@ -61,7 +61,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 // 客户端id
                 .withClient("lkker")
                 // 客户端密钥
-                .secret(new BCryptPasswordEncoder().encode("lkker@123"))
+                .secret(passwordEncoder.encode("lkker@123"))
                 // 配置鉴权的四大模式
                 // authorization_code：授权码模式  password:用户名、密码模式  client_credentials：客户端模式  implicit:简化模式
                 // refresh_token使用有效的refresh_token去重新生成一个token,之前的会失效
