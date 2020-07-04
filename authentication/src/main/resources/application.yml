@@ -1,0 +1,16 @@
+server:
+  port: 7002
+spring:
+  application:
+    name: authentication-server
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    url: jdbc:mysql:///auth?autoReconnect=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+
+
