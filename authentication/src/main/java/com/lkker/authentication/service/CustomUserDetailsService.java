@@ -3,10 +3,16 @@ package com.lkker.authentication.service;
 import com.lkker.authentication.dao.AuthInfoRepository;
 import com.lkker.authentication.model.entity.AuthInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author liliang
@@ -23,7 +29,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         AuthInfo authInfo = authInfoRepository.findAuthInfoById(id);
         if(authInfo != null){
             // 处理权限
-            return new org.springframework.security.core.userdetails.User(id,authInfo.getPassword(), null);
+            List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("admin");
+            //1：此处将权限信息添加到 GrantedAuthority 对象中，在后面进行全权限验证时会使用GrantedAuthority 对象。
+            grantedAuthorities.add(grantedAuthority);
+            return new User(id,authInfo.getPassword(), grantedAuthorities);
         }else {
             throw new UsernameNotFoundException("error: " + authInfo.getId() + " do not exist!");
         }

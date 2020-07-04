@@ -2,8 +2,10 @@ package com.lkker.authentication.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -11,6 +13,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
@@ -21,6 +24,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
  * @Date 2020/7/4 10:37
  * @Description
  **/
+@Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
@@ -57,10 +61,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 // 客户端id
                 .withClient("lkker")
                 // 客户端密钥
-                .secret("lkker@123")
+                .secret(new BCryptPasswordEncoder().encode("lkker@123"))
                 // 配置鉴权的四大模式
                 // authorization_code：授权码模式  password:用户名、密码模式  client_credentials：客户端模式  implicit:简化模式
                 // refresh_token使用有效的refresh_token去重新生成一个token,之前的会失效
+
                 .authorizedGrantTypes("authorization_code", "password", "client_credentials", "implicit", "refresh_token")
                 .scopes("all")
                 //这个是设置要不要弹出确认授权页面的.
@@ -96,6 +101,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST);
     }
 
+    //设置授权码模式的授权码如何 存取，暂时采用内存方式
+    @Bean
+    public AuthorizationCodeServices authorizationCodeServices() {
+        return new InMemoryAuthorizationCodeServices();
+    }
 
 
 }
