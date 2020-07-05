@@ -5,15 +5,16 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import java.util.List;
 
 /**
  * @Author liliang
  * @Date 2020/6/28 13:58
  * @Description:用户表
  **/
-@Entity
+@Entity(name = "authinfo")
 @Data
-@NoArgsConstructor
 public class AuthInfo {
 
     @Id
@@ -29,6 +30,6 @@ public class AuthInfo {
 
     private Boolean enabled;
 
-//    @ManyToMany
-//    protected List<AuthRoleGroup> authRoleGroups;
+    @ManyToMany(mappedBy = "authInfos")
+    private List<AuthRole> authRoles;
 }

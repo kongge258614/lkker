@@ -2,9 +2,8 @@ package com.lkker.authentication.model.entity;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * @Author liliang
@@ -12,7 +11,7 @@ import javax.persistence.Id;
  * @Description
  **/
 
-//@Entity
+@Entity(name = "authpermission")
 @Data
 public class AuthPermission {
 
@@ -21,29 +20,32 @@ public class AuthPermission {
     private String id;
 
     /**
-     * 目标地址
+     * 目标url
      */
     @Column(unique = true)
     private String url;
 
     /**
-     * 地址说明
+     * url说明
      */
     private String description;
 
-    /**
-     * 类型
-     */
-    private String type;
+    @ManyToMany
+    @JoinTable(name = "authrole_authpermisson",
+    joinColumns = {@JoinColumn(name = "authpermisson_id",referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authrole_id",referencedColumnName = "id")}
+    )
+    private List<AuthRole> authRoles;
+
 
     /**
      * 是否是开放接口
      */
-    private Boolean isPublic;
+//    private Boolean isPublic;
 
 
     /**
      * 是否可以修改
      */
-    private Boolean editable;
+//    private Boolean editable;
 }

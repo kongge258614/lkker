@@ -2,9 +2,7 @@ package com.lkker.authentication.model.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -13,7 +11,7 @@ import java.util.List;
  * @Description: 角色
  **/
 @Data
-//@Entity
+@Entity(name = "authrole")
 public class AuthRole {
     @Id
     private String id;
@@ -22,7 +20,13 @@ public class AuthRole {
 
     private String description;
 
+    @ManyToMany(mappedBy = "authRoles")
+    private List<AuthPermission> authPermissions;
+
     @ManyToMany
-    private List<AuthPermissionGroup> authPermissionGroups;
+    @JoinTable(name = "authinfo_authrole",
+    joinColumns = {@JoinColumn(name = "authrole_id",referencedColumnName = "id")},
+    inverseJoinColumns = {@JoinColumn(name = "authinfo_id",referencedColumnName = "id")})
+    private List<AuthInfo> authInfos;
 
 }
